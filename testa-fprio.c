@@ -94,7 +94,7 @@ int main ()
     erro ("não criou a fila") ;
   fprio_print (fp) ;
   printf ("\n") ;
-
+/*
   // cria e insere itens na FP
   printf ("Insere itens com prioridades crescentes:\n") ;
   for (int i = 0; i < 3; i++)
@@ -245,6 +245,6 @@ int main ()
   fprio_print (fp) ;
   printf ("\n") ;
 
-  // encerra
+  // encerra */
   return (0) ;
 }
