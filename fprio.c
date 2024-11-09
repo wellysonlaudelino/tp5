@@ -30,16 +30,16 @@ struct fprio_t *fprio_destroi (struct fprio_t *f)
   
   if (!f)
     return NULL;
-  
+
   if (f->prim)
   { 
     aux1 = f->prim;
+    aux2 = aux1;
     while (aux2 != NULL)
     {
       aux2 = aux1->prox;
       free(aux1);
       aux1 = NULL;
-      aux1 = aux2;
     }
   }
   free (f);
@@ -63,7 +63,14 @@ int fprio_insere (struct fprio_t *f, void *item, int tipo, int prio)
   
   if (!novo_nodo || !f || !item)
     return -1;
-
+  //verifica se ja tem o item
+  temp = f->prim;
+  while (temp) 
+  {
+    if (temp->item == item)
+      return -1;
+    temp = temp->prox;
+  }
     
   // Inicializa o novo nodo
   novo_nodo->item = item;
@@ -78,14 +85,11 @@ int fprio_insere (struct fprio_t *f, void *item, int tipo, int prio)
   {
     paiTemp = NULL;
     temp = f->prim;
-    
-    // Procura a posição correta para inserir o novo nodo
     while (temp && (temp->prio <= prio)) 
     {
       paiTemp = temp;
       temp = temp->prox;
     }
-    // Insere o novo nodo
     if (!paiTemp) 
     {
       // Inserção no início da fila
@@ -99,7 +103,6 @@ int fprio_insere (struct fprio_t *f, void *item, int tipo, int prio)
       novo_nodo->prox = temp;
     }
   }
-  //quantidade de itens
   f->num++;
   return f->num;
 }
@@ -110,13 +113,20 @@ int fprio_insere (struct fprio_t *f, void *item, int tipo, int prio)
 // Retorno: ponteiro para o item retirado ou NULL se fila vazia ou erro.
 void *fprio_retira (struct fprio_t *f, int *tipo, int *prio)
 {
+  struct fpnodo_t *temp;
+  void *enditem;
+  
   if (!f || !f->prim) 
-    return NULL ;
-    
+    return NULL;
+
   *tipo = f->prim->tipo;
   *prio = f->prim->prio;
-  
-  return f->prim->item;
+  enditem = f->prim->item;
+  temp= f->prim;
+  f->prim = f->prim->prox;
+  free(temp);
+  f->num--;
+  return enditem;
 }
 
 
